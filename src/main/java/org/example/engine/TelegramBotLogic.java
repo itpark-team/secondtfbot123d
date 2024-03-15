@@ -1,14 +1,22 @@
-package org.example;
+package org.example.engine;
 
 
+import org.example.db.Joke;
+import org.example.db.JokesRepository;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class TelegramBotLogic {
+
+    private Random random = new Random();
+
+    private JokesRepository jokesRepository = new JokesRepository();
+
 
     public void processTextMessageFromUser(String textFromUser, SendMessage messageToUser) {
         String textToUser = "";
@@ -57,7 +65,12 @@ public class TelegramBotLogic {
         String textToUser = "";
 
         if (textFromUser.equals("Joke")) {
-            textToUser = "Типо смешная шутка";
+            ArrayList<Joke> jokes = jokesRepository.getAllJokes();
+
+            int index = random.nextInt(jokes.size());
+
+            textToUser = jokes.get(index).getJokeText();
+
         } else if (textFromUser.equals("Weather")) {
             textToUser = "Типо прогноз погоды";
         } else if (textFromUser.equals("Music")) {
